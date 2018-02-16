@@ -1,0 +1,11 @@
+{
+	"email":{
+		"user":"",
+		"pass":""
+	},
+	"feeds":{
+		"https://readms.net/rss":{
+			"keys" :["one piece"]
+		}
+	}
+}
