@@ -19,25 +19,31 @@ mail = email_notifier.mailNotifier(settings.get_user()['name'], settings.get_use
 feeds = settings.get_feeds()
 
 while True:
+	# loop over all links
 	for feed_link in feeds.keys():
 		feed = feedparser.parse(feed_link)
 		for item in feed['items']:
+			#in every feed check all published items
+			
+			#hash the item and check if it has already been processed
 			if not parsed_items.has_key(hash(item['date'] + item['title'] + item['link'])):
 				parsed_items[hash(item['date'] + item['title'] + item['link'])] = 1
 				title = unicodedata.normalize('NFKD', item['title']).encode('ascii','ignore')
 				title_l = title.lower()
 				pickle.dump( parsed_items, open( "save.p", "wb" ) )
 				print(feeds[feed_link]['keys'])
+				
+				#check each item for specified keys
 				for key in feeds[feed_link]['keys']:
-					print('checking for %s in  %s.' %(key, feed_link))
+					
 					if key.lower() in title_l:
+						#key is found, send email
 						print('%s found in %s. Notifying..' %(key, feed_link))
 						#notify user
 						subject = 'New release: %s' %title
 						body = '%s is out! Read here:\n %s' %(title, item['link'])
 						mail.send_email(subject, body, settings.get_user()['name'])
-						exit()
-		time.sleep(10)
+	time.sleep(10)
 
 		
 
