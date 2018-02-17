@@ -7,5 +7,8 @@
 		"https://readms.net/rss":{
 			"keys" :["one piece"]
 		}
+	},
+	"settings":{
+		"update_interval":"30"
 	}
 }

@@ -14,9 +14,9 @@ except:
 	parsed_items = {}
 
 
-settings = settings_reader()
-mail = email_notifier.mailNotifier(settings.get_user()['name'], settings.get_user()['pass'])
-feeds = settings.get_feeds()
+settings_reader = settings_reader()
+mail = email_notifier.mailNotifier(settings_reader.get_user()['name'], settings_reader.get_user()['pass'])
+feeds = settings_reader.get_feeds()
 
 while True:
 	# loop over all links
@@ -31,19 +31,18 @@ while True:
 				title = unicodedata.normalize('NFKD', item['title']).encode('ascii','ignore')
 				title_l = title.lower()
 				pickle.dump( parsed_items, open( "save.p", "wb" ) )
-				print(feeds[feed_link]['keys'])
 				
 				#check each item for specified keys
 				for key in feeds[feed_link]['keys']:
 					
 					if key.lower() in title_l:
 						#key is found, send email
-						print('%s found in %s. Notifying..' %(key, feed_link))
+						# print('%s found in %s. Notifying..' %(key, feed_link))
 						#notify user
 						subject = 'New release: %s' %title
 						body = '%s is out! Read here:\n %s' %(title, item['link'])
-						mail.send_email(subject, body, settings.get_user()['name'])
-	time.sleep(10)
+						mail.send_email(subject, body, settings_reader.get_user()['name'])
+	time.sleep(int(settings_reader.get_settings()['update_interval']))
 
-		
+			
 
